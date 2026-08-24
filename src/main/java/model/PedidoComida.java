@@ -1,20 +1,24 @@
-package com.speedfast;
+package model;
 
-public class PedidoComida extends com.speedfast.Pedido {
+public class PedidoComida extends Pedido {
 
-    public PedidoComida(String idPedido, String direccionEntrega) {
-        super(idPedido, direccionEntrega, "Comida");
+    public PedidoComida(String idPedido, String direccionEntrega, double distanciaKm) {
+        super(idPedido, direccionEntrega, distanciaKm, "Comida (Restaurante)");
     }
 
+    @Override
+    public int calcularTiempoEntrega() {
+
+        return (int) (15 + (2 * distanciaKm));
+    }
 
     @Override
     public void asignarRepartidor() {
-        System.out.println("[" + idPedido + "] Buscando repartidor con MOCHILA TÉRMICA..");
+        System.out.println("[Asignación Automática] Buscando repartidor con MOCHILA TÉRMICA para " + idPedido);
     }
-
 
     @Override
     public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("[" + idPedido + "] COMIDA MANUAL: " + nombreRepartidor + " asignado. Se encontro repartidor con MOCHILA TÉRMICA.");
+        System.out.println("[Asignación Manual] " + nombreRepartidor + " asignado. VERIFICAR que cuente con mochila térmica.");
     }
 }

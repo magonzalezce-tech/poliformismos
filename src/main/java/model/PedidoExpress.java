@@ -1,20 +1,28 @@
-package com.speedfast;
+package model;
 
-public class PedidoExpress extends com.speedfast.Pedido {
+public class PedidoExpress extends Pedido {
 
-    public PedidoExpress(String idPedido, String direccionEntrega) {
-        super(idPedido, direccionEntrega, "Compra Express");
+    public PedidoExpress(String idPedido, String direccionEntrega, double distanciaKm) {
+        super(idPedido, direccionEntrega, distanciaKm, "Compra Express (Supermercado/Farmacia)");
     }
 
+    @Override
+    public int calcularTiempoEntrega() {
+
+        int tiempo = 10;
+        if (distanciaKm > 5) {
+            tiempo += 5;
+        }
+        return tiempo;
+    }
 
     @Override
     public void asignarRepartidor() {
-        System.out.println("[" + idPedido + "] Localizando al repartidor MÁS CERCANO con DISPONIBILIDAD INMEDIATA.");
+        System.out.println("[Asignación Automática] Buscando repartidor más CERCANO con DISPONIBILIDAD INMEDIATA para " + idPedido);
     }
-
 
     @Override
     public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("[" + idPedido + "] EXPRESS MANUAL: " + nombreRepartidor + " asignado. Validación: Confirmado repartidor disponible.");
+        System.out.println("[Asignación Manual] " + nombreRepartidor + " asignado por cercanía para atención inmediata.");
     }
 }

@@ -1,29 +1,39 @@
-package com.speedfast;
+package model;
 
-public class Pedido {
-    
+public abstract class Pedido {
+
     protected String idPedido;
     protected String direccionEntrega;
+    protected double distanciaKm;
     protected String tipoPedido;
 
- 
-    public Pedido(String idPedido, String direccionEntrega, String tipoPedido) {
-     
+
+    public Pedido(String idPedido, String direccionEntrega, double distanciaKm, String tipoPedido) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
+        this.distanciaKm = distanciaKm;
         this.tipoPedido = tipoPedido;
     }
 
-  
+
+    public abstract int calcularTiempoEntrega();
+
+
+    public void mostrarResumen() {
+        System.out.println("========================================");
+        System.out.println("ID Pedido: " + idPedido);
+        System.out.println("Tipo: " + tipoPedido);
+        System.out.println("Dirección: " + direccionEntrega);
+        System.out.println("Distancia: " + distanciaKm + " km");
+    }
+
+
     public void asignarRepartidor() {
-        System.out.println("[" + idPedido + "] Buscando repartidor para entrega en: " + direccionEntrega);
+        System.out.println("Buscando repartidor genérico para el pedido " + idPedido);
     }
 
-   
+
     public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("[" + idPedido + "] Asignando manualmente al repartidor: " + nombreRepartidor);
-    }
-
-    public void assignarRepartidor(String carlosGómez) {
+        System.out.println("Asignando manualmente al repartidor: " + nombreRepartidor);
     }
 }
