@@ -4,32 +4,39 @@ import model.Pedido;
 import model.PedidoComida;
 import model.PedidoEncomienda;
 import model.PedidoExpress;
+import model.ControladorDeEnvios;
 
 public class Main {
     public static void main(String[] args) {
-
-        Pedido pedido1 = new PedidoComida("COM-101", "Av. del Sol 456", 4.5);
-        Pedido pedido2 = new PedidoEncomienda("ENC-202", "Calle Los Almendros 789", 10.0);
-        Pedido pedido3 = new PedidoExpress("EXP-303", "Pasaje Central 123", 6.0);
+        System.out.println("=== SISTEMA INTEGRAL SPEEDFAST ===\n");
 
 
-        Pedido[] listaPedidos = {pedido1, pedido2, pedido3};
-
-        System.out.println("=== SISTEMA DE REPARTO SPEEDFAST ===");
-
-        for (Pedido p : listaPedidos) {
-
-            p.mostrarResumen();
+        ControladorDeEnvios controlador = new ControladorDeEnvios();
 
 
-            System.out.println("Tiempo estimado de entrega: " + p.calcularTiempoEntrega() + " minutos.");
+        Pedido pedidoComida = new PedidoComida("COM-901", "Av. Alemania 320", 3.5);
+        Pedido pedidoEncomienda = new PedidoEncomienda("ENC-902", "Parque Industrial Bodega 4", 15.0);
+        Pedido pedidoExpress = new PedidoExpress("EXP-903", "Farmacia Central Local 5", 6.8);
 
 
-            p.asignarRepartidor();
+        pedidoComida.mostrarResumen();
+        System.out.println("Tiempo estimado: " + pedidoComida.calcularTiempoEntrega() + " min.");
+        pedidoComida.asignarRepartidor();
+        controlador.despachar(pedidoComida);
 
 
-            p.asignarRepartidor("Carlos Repartidor");
-        }
-        System.out.println("========================================");
+        pedidoEncomienda.mostrarResumen();
+        System.out.println("Tiempo estimado: " + pedidoEncomienda.calcularTiempoEntrega() + " min.");
+        pedidoEncomienda.asignarRepartidor("Juan Pérez");
+        controlador.cancelar(pedidoEncomienda, "El empaque no cumple con las normas de seguridad.");
+
+
+        pedidoExpress.mostrarResumen();
+        System.out.println("Tiempo estimado: " + pedidoExpress.calcularTiempoEntrega() + " min.");
+        pedidoExpress.asignarRepartidor("María López");
+        controlador.despachar(pedidoExpress);
+
+
+        controlador.verHistorial();
     }
 }
