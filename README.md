@@ -160,3 +160,78 @@ javac *.java
 # Lanzar la simulación principal
 java Main
 ```
+Semana 4
+
+# Sistema Integral de Entregas SpeedFast - Módulo de Simulación Concurrente
+
+Este repositorio contiene la evolución del sistema de reparto a domicilio para la empresa **SpeedFast** correspondiente a la **Semana 4**. El objetivo central de esta fase es incorporar **programación concurrente** en Java para simular el comportamiento en tiempo real de múltiples repartidores operando de manera simultánea e independiente a través de hilos de ejecución.
+
+## 📋 Descripción del Caso
+
+A partir de la arquitectura orientada a objetos previamente consolidada (basada en abstracción, polimorfismo e interfaces), el sistema ahora requiere modelar un entorno operativo real. Cada repartidor de la empresa funciona como una entidad autónoma que procesa su propia hoja de ruta (lista de pedidos asignados) en paralelo con sus compañeros. 
+
+El sistema utiliza retardos controlados y aleatorios para representar los tiempos físicos de traslado, notificando de manera dinámica el progreso y estado de cada entrega en la consola central.
+
+---
+
+## 🏗️ Arquitectura y Diseño del Software
+
+El diseño combina las bases de la Programación Orientada a Objetos (POO) con el API de Concurrencia de Java:
+
+### 1. Estructura Orientada a Objetos (Legado)
+* **Clase Abstracta `Pedido`**: Define la raíz común del dominio con atributos clave (`idPedido`, `direccionEntrega`, `distanciaKm`) y métodos para el negocio (`calcularTiempoEntrega()`, `mostrarResumen()`).
+* **Especializaciones de Servicio**: Las subclases `PedidoComida`, `PedidoEncomienda` y `PedidoExpress` mantienen sus reglas de negocio particulares y fórmulas para el cálculo de tiempos estimados de entrega.
+* **Interfaces de Control**: Se reutilizan `Despachable`, `Cancelable` y `Rastreable` para desacoplar las operaciones logísticas del ciclo de vida de los envíos.
+
+### 2. Módulo Concurrente (Nueva Implementación)
+* **Clase `Repartidor` (Procesamiento Asíncrono)**: 
+  * Implementa la interfaz nativa `Runnable`.
+  * Encapsula los atributos `nombre` y una colección dinámica (`List<Pedido>`) de órdenes asignadas.
+  * Su método sobrescrito `run()` gobierna el despacho secuencial de su lista, utilizando `Thread.sleep()` con intervalos aleatorios para simular el desplazamiento físico hacia el destino.
+* **Orquestación en `Main` (`ExecutorService`)**: 
+  * Se despliega un pool de hilos administrado para iniciar en paralelo las tareas de los repartidores de forma eficiente.
+  * Implementa un bloqueo controlado de sincronización mediante `awaitTermination` para asegurar que el programa principal informe el cierre solo cuando todos los hilos completen sus rutas de manera exitosa.
+
+---
+
+## 📂 Estructura del Proyecto
+
+El código fuente dentro de la carpeta `src/main/java` queda organizado de la siguiente manera:
+
+*   `Pedido.java`: Clase abstracta molde del sistema.
+*   `PedidoComida.java`: Subclase con lógica para entregas de restaurantes.
+*   `PedidoEncomienda.java`: Subclase para control y transporte de paquetería.
+*   `PedidoExpress.java`: Subclase especializada en compras rápidas de conveniencia.
+*   `Despachable.java` / `Cancelable.java` / `Rastreable.java`: Interfaces funcionales operativas.
+*   `Repartidor.java`: Unidad de trabajo concurrente (`Runnable`) encargada de realizar las entregas.
+*   `Main.java`: Clase conductora que instancia los datos de prueba, arranca el `ExecutorService` y gestiona el ciclo de vida de la simulación.
+
+---
+
+## 🛠️ Requisitos de Ejecución
+
+*   **Java Development Kit (JDK)**: Versión 11 o superior (Recomendado JDK 17 o 21).
+*   **IDE**: IntelliJ IDEA (Community o Ultimate Edition).
+
+---
+
+## 🚀 Instrucciones de Ejecución
+
+### Desde IntelliJ IDEA
+1. Abra IntelliJ IDEA y seleccione **Open** o **Import Project**.
+2. Navegue hasta la carpeta raíz del proyecto y selecciónela.
+3. Asegúrese de que el proyecto esté configurado con el SDK correcto (`File` > `Project Structure` > `Project`).
+4. Busque el archivo `Main.java`, haga clic derecho sobre él y seleccione **Run 'Main.main()'**.
+
+### Desde la Terminal (Consola de Comandos)
+1. Compile todos los componentes del sistema:
+   ```bash
+   javac src/main/java/*.java -d out/
+   ```
+2. Lance la simulación principal:
+   ```bash
+   java -cp out/ Main
+   ```
+
+---
+
