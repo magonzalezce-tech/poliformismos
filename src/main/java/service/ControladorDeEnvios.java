@@ -1,4 +1,9 @@
-package model;
+package service;
+
+import Interfaces.Cancelable;
+import Interfaces.Despachable;
+import Interfaces.Rastreable;
+import model.Pedido;
 
 import java.util.ArrayList;
 
@@ -37,5 +42,15 @@ public class ControladorDeEnvios implements Despachable, Cancelable, Rastreable 
             }
         }
         System.out.println("===============================================");
+    }
+
+    @Override
+    public void cancelar() {
+
+    }
+
+    @Override
+    public void despachar() {
+
     }
 }

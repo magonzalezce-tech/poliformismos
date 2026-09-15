@@ -8,7 +8,11 @@ public class PedidoExpress extends Pedido {
 
     @Override
     public int calcularTiempoEntrega() {
-        return distanciaKm > 5 ? 15 : 10;
+        int tiempo = 10;
+        if (distanciaKm > 5) {
+            tiempo += 5;
+        }
+        return tiempo;
     }
 
     @Override
@@ -19,5 +23,15 @@ public class PedidoExpress extends Pedido {
     @Override
     public void asignarRepartidor(String nombreRepartidor) {
         System.out.println("[" + idPedido + "] Asignación prioritaria a " + nombreRepartidor + " por cercanía inmediata.");
+    }
+
+    @Override
+    public void cancelar(Pedido pedido, String motivo) {
+
+    }
+
+    @Override
+    public void despachar(Pedido pedido) {
+
     }
 }

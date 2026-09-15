@@ -2,41 +2,65 @@ package ui;
 
 import model.Pedido;
 import model.PedidoComida;
-import model.PedidoEncomienda;
-import model.PedidoExpress;
-import model.ControladorDeEnvios;
+import service.Repartidor;
+import service.ZonaDeCarga;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== SISTEMA INTEGRAL SPEEDFAST ===\n");
+        System.out.println("=== SPEEDFAST ===\n");
+
+        ZonaDeCarga zonaComun = new ZonaDeCarga();
+
+        zonaComun.agregarPedido(new PedidoComida("COM-101", "Av. Del Mar 450", 3.5));
+        zonaComun.agregarPedido(new PedidoComida("COM-102", "Calle Los Alerces 92", 6.0));
+        zonaComun.agregarPedido(new PedidoComida("ENC-201", "Oficina Central Torre B", 12.0));
+        zonaComun.agregarPedido(new PedidoComida("EXP-301", "Condominio El Rosal Dep. 402", 2.1));
+        zonaComun.agregarPedido(new PedidoComida("EXP-302", "Farmacia Cruz Verde Centro", 1.5));
+        zonaComun.agregarPedido(new PedidoComida("ENC-202", "Pasaje Las Violetas 771", 8.4));
 
 
-        ControladorDeEnvios controlador = new ControladorDeEnvios();
+        List<Pedido> pedidosCarlos = new ArrayList<>();
+        pedidosCarlos.add(new PedidoComida("COM-101", "Av. Del Mar 450", 3.5));
+        pedidosCarlos.add(new PedidoComida("COM-102", "Calle Los Alerces 92", 6.0));
+
+        List<Pedido> pedidosAna = new ArrayList<>();
+        pedidosAna.add(new PedidoComida("ENC-201", "Oficina Central Torre B", 12.0));
+        pedidosAna.add(new PedidoComida("EXP-301", "Condominio El Rosal Dep. 402", 2.1));
+
+        List<Pedido> pedidosLuis = new ArrayList<>();
+        pedidosLuis.add(new PedidoComida("EXP-302", "Farmacia Cruz Verde Centro", 1.5));
+        pedidosLuis.add(new PedidoComida("ENC-202", "Pasaje Las Violetas 771", 8.4));
 
 
-        Pedido pedidoComida = new PedidoComida("COM-901", "Av. Alemania 320", 3.5);
-        Pedido pedidoEncomienda = new PedidoEncomienda("ENC-902", "Parque Industrial Bodega 4", 15.0);
-        Pedido pedidoExpress = new PedidoExpress("EXP-903", "Farmacia Central Local 5", 6.8);
+        Repartidor r1 = new Repartidor("Carlos", zonaComun);
+        Repartidor r2 = new Repartidor("Ana", zonaComun);
+        Repartidor r3 = new Repartidor("Luis", zonaComun);
+
+        ExecutorService ejecutor = Executors.newFixedThreadPool(3);
 
 
-        pedidoComida.mostrarResumen();
-        System.out.println("Tiempo estimado: " + pedidoComida.calcularTiempoEntrega() + " min.");
-        pedidoComida.asignarRepartidor();
-        controlador.despachar(pedidoComida);
+        ejecutor.execute(r1);
+        ejecutor.execute(r2);
+        ejecutor.execute(r3);
 
 
-        pedidoEncomienda.mostrarResumen();
-        System.out.println("Tiempo estimado: " + pedidoEncomienda.calcularTiempoEntrega() + " min.");
-        pedidoEncomienda.asignarRepartidor("Juan Pérez");
-        controlador.cancelar(pedidoEncomienda, "El empaque no cumple con las normas de seguridad.");
+        ejecutor.shutdown();
 
+        try {
 
-        pedidoExpress.mostrarResumen();
-        System.out.println("Tiempo estimado: " + pedidoExpress.calcularTiempoEntrega() + " min.");
-        pedidoExpress.asignarRepartidor("María López");
-        controlador.despachar(pedidoExpress);
-
-
-        controlador.verHistorial();
+            if (ejecutor.awaitTermination(10, TimeUnit.MINUTES)) {
+                System.out.println("\n=======================================================");
+                System.out.println("🎉 Todos los pedidos han sido entregados correctamente.");
+                System.out.println("=======================================================");
+            }
+        } catch (InterruptedException e) {
+            System.err.println("No se han entregado todos los pedidos.");
+            Thread.currentThread().interrupt();
+        }
     }
 }

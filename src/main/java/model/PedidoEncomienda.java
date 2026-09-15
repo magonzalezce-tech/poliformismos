@@ -20,4 +20,14 @@ public class PedidoEncomienda extends Pedido {
     public void asignarRepartidor(String nombreRepartidor) {
         System.out.println("[" + idPedido + "] Encomienda verificada. Asignada manualmente al repartidor: " + nombreRepartidor);
     }
+
+    @Override
+    public void cancelar(Pedido pedido, String motivo) {
+
+    }
+
+    @Override
+    public void despachar(Pedido pedido) {
+
+    }
 }
