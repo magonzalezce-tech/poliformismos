@@ -2,6 +2,7 @@ package service;
 
 import Interfaces.Cancelable;
 import Interfaces.Despachable;
+import Interfaces.EstadoPedido;
 import Interfaces.Rastreable;
 import model.Pedido;
 
@@ -17,15 +18,15 @@ public class ControladorDeEnvios implements Despachable, Cancelable, Rastreable 
 
     @Override
     public void despachar(Pedido pedido) {
-        pedido.setEstado("En Camino");
-        String registro = "Pedido " + pedido.getIdPedido() + " despachado con éxito hacia " + pedido.direccionEntrega;
+        pedido.setEstado(EstadoPedido.valueOf("En Camino"));
+        String registro = "Pedido " + pedido.getIdPedido() + " despachado con éxito hacia " + pedido.getDireccionEntrega();
         historialEntregas.add(registro);
         System.out.println(">> [DESPACHO] " + registro);
     }
 
     @Override
     public void cancelar(Pedido pedido, String motivo) {
-        pedido.setEstado("Cancelado");
+        pedido.setEstado(EstadoPedido.valueOf("Cancelado"));
         String registro = "Pedido " + pedido.getIdPedido() + " CANCELADO. Motivo: " + motivo;
         historialEntregas.add(registro);
         System.out.println(">> [ALERTA] " + registro);

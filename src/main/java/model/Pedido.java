@@ -6,115 +6,70 @@ import Interfaces.EstadoPedido;
 import Interfaces.Rastreable;
 
 public abstract class Pedido implements Despachable, Cancelable, Rastreable {
-    protected int id;
-    public String getOriginalEstado;
-    protected String idPedido;
-    public String direccionEntrega;
-    protected double distanciaKm;
-    protected String tipoPedido;
-    protected EstadoPedido estado;
+    private int idPedido;
+    private String direccionEntrega;
+    private String tipoPedido;
+    private double distanciaKm;
+    private EstadoPedido estado;
 
-    public Pedido() {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getGetOriginalEstado() {
-        return getOriginalEstado;
-    }
-
-    public void setGetOriginalEstado(String getOriginalEstado) {
-        this.getOriginalEstado = getOriginalEstado;
-    }
-
-    public void setIdPedido(String idPedido) {
-        this.idPedido = idPedido;
-    }
-
-    public String getDireccionEntrega() {
-        return direccionEntrega;
-    }
-
-    public void setDireccionEntrega(String direccionEntrega) {
-        this.direccionEntrega = direccionEntrega;
-    }
-
-    public double getDistanciaKm() {
-        return distanciaKm;
-    }
-
-    public void setDistanciaKm(double distanciaKm) {
-        this.distanciaKm = distanciaKm;
-    }
-
-    public String getTipoPedido() {
-        return tipoPedido;
-    }
-
-    public void setTipoPedido(String tipoPedido) {
-        this.tipoPedido = tipoPedido;
-    }
-
-    public EstadoPedido getEstado() {
-        return estado;
-    }
-
-    public Pedido(String idPedido, String direccionEntrega, double distanciaKm, String tipoPedido) {
-        this.id = id;
+    public Pedido(int id, String direccionEntrega, String tipoPedido, double distanciaKm) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
-        this.distanciaKm = distanciaKm;
         this.tipoPedido = tipoPedido;
+        this.distanciaKm = distanciaKm;
         this.estado = EstadoPedido.PENDIENTE;
     }
 
+
+    public int getId() { return idPedido; }
+    public String getDireccionEntrega() { return direccionEntrega; }
+    public String getTipoPedido() { return tipoPedido; }
+    public double getDistanciaKm() { return distanciaKm; }
+    public EstadoPedido getEstado() { return estado; }
+
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
+    }
+
+
     public void mostrarResumen() {
-        System.out.println("----------------------------------------");
-        System.out.println("ID Pedido: " + idPedido + " [" + tipoPedido + "]");
-        System.out.println("Dirección: " + direccionEntrega + " | Distancia: " + distanciaKm + " km");
-        System.out.println("Estado Actual: " + estado);
+        System.out.println("[" + tipoPedido + "] ID: " + idPedido + " | Destino: " + direccionEntrega + " | Distancia: " + distanciaKm + " km | Estado: " + estado);
     }
 
 
-    public String getIdPedido() { return idPedido; }
-    public void setEstado(EstadoPedido estado) { this.estado = estado; }
-
-    public void setEstado(String nuevoEstado) {
-        this.estado = EstadoPedido.valueOf(nuevoEstado.toUpperCase());
-    }
-    public abstract int calcularTiempoEntrega();
     public abstract void asignarRepartidor();
     public abstract void asignarRepartidor(String nombreRepartidor);
 
+
+    public abstract int calcularTiempoEntrega();
+
     @Override
     public String toString() {
-        return "Pedido{" + "id=" + id + ", direccion='" + direccionEntrega + '\'' + ", estado=" + estado + '}';
+        return "Pedido #" + idPedido + " [" + tipoPedido + "] - Destino: " + direccionEntrega + " (" + estado + ")";
     }
-    
+
+
     @Override
     public void despachar() {
-        System.out.println("Pedido " + idPedido + " ha sido despachado.");
+        this.estado = EstadoPedido.valueOf("En Camino");
+        System.out.println("➔ Pedido " + idPedido + " ha cambiado su estado a EN CAMINO.");
     }
 
     @Override
     public void cancelar() {
-        System.out.println("Pedido " + idPedido + " ha sido cancelado.");
+        this.estado = EstadoPedido.valueOf("Cancelado");
+        System.out.println("❌ Pedido " + idPedido + " ha sido CANCELADO.");
     }
 
     @Override
     public void verHistorial() {
-        System.out.println("Historial de auditoría para el Pedido " + idPedido);
+        System.out.println("📋 Historial " + idPedido + ": Creado -> Asignado -> " + estado);
     }
 
-    public abstract void cancelar(Pedido pedido, String motivo);
+    public void setResult(String entregado) {
+    }
 
-    public abstract void despachar(Pedido pedido);
+    public String getIdPedido() {
+        return "";
+    }
 }
-

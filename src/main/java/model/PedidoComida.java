@@ -3,26 +3,31 @@ package model;
 public class PedidoComida extends Pedido {
 
     public PedidoComida(String idPedido, String direccionEntrega, double distanciaKm) {
-        super(idPedido, direccionEntrega, distanciaKm, "Comida");
-    }
-
-    public PedidoComida(int i, String direccionEntrega) {
-        super();
-    }
-
-    @Override
-    public int calcularTiempoEntrega() {
-        return (int) (15 + (2 * distanciaKm));
+        super(idPedido, direccionEntrega, distanciaKm, Double.parseDouble("Comida"));
     }
 
     @Override
     public void asignarRepartidor() {
-        System.out.println("[" + idPedido + "] Buscando repartidor con mochila térmica disponible...");
+        System.out.println("Pedido [" + getIdPedido() + "]: Buscando repartidor con MOCHILA TÉRMICA disponible...");
+    }
+
+
+    public void asignarRepartidor(String nombreRepartidor, boolean tieneMochila) {
+        if (tieneMochila) {
+            System.out.println("✓ Pedido " + getIdPedido() + " asignado a " + nombreRepartidor + " (Mochila validada).");
+        } else {
+            System.out.println("⚠ Alerta: " + nombreRepartidor + " no posee mochila térmica para el pedido " + getIdPedido());
+        }
     }
 
     @Override
     public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("[" + idPedido + "] Asignado manualmente a: " + nombreRepartidor + " (Verificado: Cuenta con mochila térmica).");
+        asignarRepartidor(nombreRepartidor, true);
+    }
+
+    @Override
+    public int calcularTiempoEntrega() {
+        return (int) (15 + (2 * getDistanciaKm()));
     }
 
     @Override
